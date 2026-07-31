@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ChronoDraft — 不学 Git，也能安心保存每一版作品。"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>ChronoDraft · 给写作者的版本时光机</title>
+    <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    <div class="titlebar" aria-hidden="true"></div>
+
+    <div id="loading-screen" class="screen loading-screen">
+      <div class="brand-mark brand-mark--large">D</div>
+      <p>正在打开你的版本时光机…</p>
+    </div>
+
+    <main id="welcome-screen" class="screen welcome-screen hidden">
+      <section class="welcome-copy">
+        <div class="brand">
+          <div class="brand-mark">D</div>
+          <span>ChronoDraft</span>
+        </div>
+        <p class="eyebrow">给写作者的版本时光机</p>
+        <h1>不学 Git，<br />也能安心保存每一版作品。</h1>
+        <p class="welcome-lead">
+          选中论文、小说或笔记文件夹。以后每次修改完，只要点一下“保存新版本”。
+        </p>
+        <button id="welcome-choose" class="button button--primary button--large">
+          <span>选择我的写作文件夹</span>
+          <span aria-hidden="true">→</span>
+        </button>
+        <p class="privacy-note">
+          <span class="privacy-dot"></span>
+          文件默认只保存在你的电脑上，不上传、不收集密钥
+        </p>
+      </section>
+      <section class="welcome-visual" aria-label="ChronoDraft 使用流程">
+        <div class="paper-stack">
+          <article class="paper paper--back">
+            <span>7 月 28 日</span>
+            <strong>完成论文初稿</strong>
+          </article>
+          <article class="paper paper--middle">
+            <span>昨天 21:43</span>
+            <strong>补充第三章案例</strong>
+          </article>
+          <article class="paper paper--front">
+            <div class="paper-check">✓</div>
+            <span>刚刚</span>
+            <strong>新版本已安全保存</strong>
+            <div class="paper-lines">
+              <i></i><i></i><i></i><i></i>
+            </div>
+          </article>
+        </div>
+        <div class="orbit orbit--one"></div>
+        <div class="orbit orbit--two"></div>
+      </section>
+    </main>
+
+    <div id="app-screen" class="app-shell hidden">
+      <aside class="sidebar">
+        <div class="brand brand--sidebar">
+          <div class="brand-mark">D</div>
+          <span>ChronoDraft</span>
+        </div>
+
+        <nav class="nav" aria-label="主导航">
+          <button class="nav-item active" data-view="today">
+            <span class="nav-icon">✦</span>
+            <span>今天</span>
+          </button>
+          <button class="nav-item" data-view="history">
+            <span class="nav-icon">↶</span>
+            <span>历史版本</span>
+            <span id="history-count" class="nav-count">0</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div id="cloud-card" class="cloud-card">
+            <div class="cloud-card__icon">☁</div>
+            <div>
+              <strong id="cloud-title">仅保存在本机</strong>
+              <p id="cloud-description">连接 GitHub，多一份云端备份</p>
+            </div>
+            <button id="cloud-action" class="text-button">连接</button>
+          </div>
+          <button id="settings-button" class="nav-item nav-item--quiet">
+            <span class="nav-icon">⚙</span>
+            <span>项目设置</span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="workspace-header">
+          <div class="project-heading">
+            <button id="project-switcher" class="project-button" title="切换文件夹">
+              <span id="project-initial" class="project-initial">稿</span>
+              <span>
+                <strong id="project-name">我的作品</strong>
+                <small id="project-path">—</small>
+              </span>
+              <span class="project-chevron">⌄</span>
+            </button>
+          </div>
+          <div class="header-actions">
+            <span id="sync-badge" class="sync-badge">
+              <i></i><span>本地安全</span>
+            </span>
+            <button id="show-folder" class="icon-button" title="在文件夹中显示">↗</button>
+            <button id="refresh-button" class="icon-button" title="刷新">↻</button>
+          </div>
+        </header>
+
+        <div id="today-view" class="view">
+          <div class="view-scroll">
+            <section class="hero-card">
+              <div>
+                <p id="greeting" class="eyebrow">上午好</p>
+                <h2>今天的修改，<br />要留个安心的版本吗？</h2>
+                <p id="change-summary" class="hero-description">正在查看文件变化…</p>
+              </div>
+              <div class="hero-decoration" aria-hidden="true">
+                <span class="hero-page hero-page--1"></span>
+                <span class="hero-page hero-page--2"></span>
+                <span class="hero-page hero-page--3">✓</span>
+              </div>
+            </section>
+
+            <div class="dashboard-grid">
+              <section class="panel save-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">这次改了什么？</p>
+                    <h3>保存新版本</h3>
+                  </div>
+                  <span id="change-count-badge" class="count-badge">0 个文件</span>
+                </div>
+                <label class="message-field">
+                  <span class="sr-only">版本说明</span>
+                  <textarea
+                    id="version-message"
+                    maxlength="120"
+                    rows="2"
+                    placeholder="例如：完成第三章初稿，补充了两个案例"
+                  ></textarea>
+                  <span id="message-count">0 / 120</span>
+                </label>
+                <button id="save-button" class="button button--primary button--save" disabled>
+                  <span class="button-icon">✓</span>
+                  <span class="button-copy">
+                    <strong>保存新版本</strong>
+                    <small id="save-button-note">修改会先安全保存在本机</small>
+                  </span>
+                  <span class="button-arrow">→</span>
+                </button>
+                <p class="keyboard-tip"><kbd>⌘</kbd><kbd>↵</kbd> 快速保存</p>
+              </section>
+
+              <section class="panel changes-panel">
+                <div class="panel-heading panel-heading--compact">
+                  <div>
+                    <p class="section-kicker">自动发现</p>
+                    <h3>本次变化</h3>
+                  </div>
+                  <button id="changes-refresh" class="text-button">刷新</button>
+                </div>
+                <div id="changes-list" class="changes-list"></div>
+              </section>
+            </div>
+
+            <section class="recent-section">
+              <div class="section-title-row">
+                <div>
+                  <p class="section-kicker">你的创作足迹</p>
+                  <h3>最近版本</h3>
+                </div>
+                <button class="text-button" data-view-target="history">查看全部 →</button>
+              </div>
+              <div id="recent-history" class="timeline timeline--recent"></div>
+            </section>
+          </div>
+        </div>
+
+        <div id="history-view" class="view hidden">
+          <div class="view-scroll history-page">
+            <div class="page-heading">
+              <p class="section-kicker">随时可以回去看看</p>
+              <h2>历史版本</h2>
+              <p>每次保存都是一个安全锚点。恢复前，当前内容也会自动备份。</p>
+            </div>
+            <div id="full-history" class="timeline timeline--full"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="modal-backdrop" class="modal-backdrop hidden">
+      <section id="setup-modal" class="modal hidden" role="dialog" aria-modal="true">
+        <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+        <p class="section-kicker">只需设置一次</p>
+        <h2>告诉 ChronoDraft 这是谁的作品</h2>
+        <p class="modal-description">这些信息只会写入当前项目的版本记录，不会创建账号。</p>
+        <form id="identity-form">
+          <label>
+            <span>你的名字</span>
+            <input id="identity-name" autocomplete="name" placeholder="例如：张知昊" required />
+          </label>
+          <label>
+            <span>邮箱</span>
+            <input
+              id="identity-email"
+              type="email"
+              autocomplete="email"
+              placeholder="例如：you@example.com"
+              required
+            />
+          </label>
+          <button class="button button--primary" type="submit">保存并继续</button>
+        </form>
+      </section>
+
+      <section id="remote-modal" class="modal hidden" role="dialog" aria-modal="true">
+        <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+        <p class="section-kicker">免费的异地备份</p>
+        <h2>连接 GitHub</h2>
+        <p class="modal-description">
+          先在 GitHub 新建一个空的私有仓库，再把仓库地址粘贴到这里。ChronoDraft 不会读取或保存你的密码、Token 或私钥。
+        </p>
+        <div class="safety-banner"><span>♢</span> 凭据由系统 Git 管理，ChronoDraft 永远不接触私钥</div>
+        <form id="remote-form">
+          <label>
+            <span>GitHub 仓库地址</span>
+            <input
+              id="remote-url"
+              type="url"
+              spellcheck="false"
+              placeholder="https://github.com/你的用户名/仓库名.git"
+              required
+            />
+          </label>
+          <button class="button button--primary" type="submit">连接这个仓库</button>
+        </form>
+        <div class="modal-footer-row">
+          <button id="create-repository-link" class="text-button">去 GitHub 免费新建仓库 ↗</button>
+          <button id="remove-remote" class="text-button text-button--danger hidden">断开当前仓库</button>
+        </div>
+      </section>
+
+      <section id="restore-modal" class="modal modal--small hidden" role="dialog" aria-modal="true">
+        <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+        <div class="restore-icon">↶</div>
+        <h2>恢复这个历史版本？</h2>
+        <p id="restore-description" class="modal-description"></p>
+        <div class="safety-banner safety-banner--warm">
+          不会丢失现在的内容：ChronoDraft 会先自动保存当前状态。
+        </div>
+        <div class="modal-actions">
+          <button class="button button--secondary" data-close-modal>先不恢复</button>
+          <button id="confirm-restore" class="button button--primary">安全恢复</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

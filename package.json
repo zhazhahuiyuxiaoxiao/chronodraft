@@ -1,0 +1,66 @@
+{
+  "name": "chronodraft",
+  "version": "0.1.0",
+  "description": "Version control for writers — without learning Git.",
+  "main": "src/main.js",
+  "author": "zhihao zhang",
+  "homepage": "https://github.com/zhazhahuiyuxiaoxiao/chronodraft",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "test": "node --test",
+    "ui:smoke": "node scripts/ui-smoke.mjs",
+    "icons": "node scripts/generate-icons.mjs",
+    "pack": "npx --yes electron-builder@26.15.3 --dir",
+    "dist:mac": "npx --yes electron-builder@26.15.3 --mac dmg zip --arm64",
+    "dist:win": "npx --yes electron-builder@26.15.3 --win nsis portable",
+    "dist:linux": "npx --yes electron-builder@26.15.3 --linux AppImage",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/git-service.js && node --check src/renderer/app.js"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "build": {
+    "appId": "app.chronodraft.desktop",
+    "productName": "ChronoDraft",
+    "asar": true,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "LICENSE"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "identity": null,
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "title": "${productName} ${version}"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "artifactName": "${productName}-${version}-${arch}-${target}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "ChronoDraft"
+    },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "Office",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    }
+  }
+}
