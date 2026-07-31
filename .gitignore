@@ -4,3 +4,4 @@ release/
 *.log
 .DS_Store
 .chronodraft/
+docs/marketing/demo-frames/

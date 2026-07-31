@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChronoDraft Social Preview</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { width: 1280px; height: 640px; margin: 0; overflow: hidden; }
+      body {
+        position: relative;
+        color: #25241f;
+        background: #f4f1ea url("social-background.png") center / cover no-repeat;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      body::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background: linear-gradient(90deg, rgba(244, 241, 234, 0.99) 0%, rgba(244, 241, 234, 0.93) 39%, rgba(244, 241, 234, 0.28) 67%, rgba(244, 241, 234, 0.04) 100%);
+      }
+      .copy {
+        position: absolute;
+        z-index: 2;
+        top: 62px;
+        left: 72px;
+        width: 580px;
+      }
+      .brand { display: flex; align-items: center; gap: 14px; font-size: 25px; font-weight: 800; }
+      .mark {
+        display: grid;
+        width: 50px;
+        height: 50px;
+        place-items: center;
+        color: #fff;
+        border-radius: 15px 15px 15px 5px;
+        background: #43695b;
+        font-family: Georgia, "Songti SC", serif;
+        font-size: 31px;
+      }
+      .eyebrow { margin-top: 62px; color: #d98254; font-size: 15px; font-weight: 800; letter-spacing: 0.16em; }
+      h1 {
+        margin: 14px 0 18px;
+        font-family: "Songti SC", "STSong", Georgia, serif;
+        font-size: 60px;
+        font-weight: 600;
+        letter-spacing: -0.055em;
+        line-height: 1.16;
+      }
+      .lead { margin: 0; color: #5f5c54; font-size: 21px; line-height: 1.65; }
+      .tags { display: flex; gap: 10px; margin-top: 31px; }
+      .tag {
+        padding: 9px 15px;
+        border: 1px solid rgba(67, 105, 91, 0.2);
+        border-radius: 999px;
+        color: #315246;
+        background: rgba(255, 253, 248, 0.8);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .product {
+        position: absolute;
+        z-index: 3;
+        top: 124px;
+        right: -45px;
+        width: 670px;
+        padding: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(49, 82, 70, 0.18);
+        border-radius: 22px;
+        background: rgba(255, 253, 248, 0.95);
+        box-shadow: 0 28px 70px rgba(37, 36, 31, 0.22);
+        transform: rotate(-1.2deg);
+      }
+      .product img { display: block; width: 100%; border-radius: 14px; }
+      .version {
+        position: absolute;
+        z-index: 4;
+        right: 36px;
+        bottom: 28px;
+        color: rgba(37, 36, 31, 0.62);
+        font-size: 13px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="copy">
+      <div class="brand"><span class="mark">D</span><span>ChronoDraft</span></div>
+      <div class="eyebrow">给写作者的版本时光机</div>
+      <h1>不学 Git，<br />也能保存每一版作品。</h1>
+      <p class="lead">一个按钮保存本地版本，随时查看历史、安全恢复。</p>
+      <div class="tags"><span class="tag">论文</span><span class="tag">小说</span><span class="tag">笔记</span></div>
+    </section>
+    <div class="product"><img src="../app-preview.png" alt="ChronoDraft 主界面" /></div>
+    <div class="version">开源 · 本地优先 · macOS / Windows / Linux</div>
+  </body>
+</html>

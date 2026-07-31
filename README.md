@@ -15,7 +15,9 @@
 
 </div>
 
-![ChronoDraft 主界面](docs/app-preview.png)
+## 22 秒看懂
+
+![ChronoDraft：选择文件夹、发现变化、保存版本、查看历史](docs/marketing/demo.gif)
 
 ## 下载与安装
 
@@ -159,7 +161,7 @@ ChronoDraft 目前是 **0.1.1 早期预览版**。核心本地保存、历史、
 
 ## 贡献与许可
 
-贡献指南见 [CONTRIBUTING.md](CONTRIBUTING.md)。项目采用 [MIT License](LICENSE)。
+贡献指南见 [CONTRIBUTING.md](CONTRIBUTING.md)。准备转发项目时，可以直接使用[宣传图与中文发布文案](docs/marketing/LAUNCH_COPY.md)。项目采用 [MIT License](LICENSE)。
 
 ---
 

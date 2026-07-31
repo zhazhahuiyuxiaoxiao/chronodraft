@@ -1225,6 +1225,25 @@ kbd {
   pointer-events: none;
 }
 
+/* Only appears when scripts/capture-demo.mjs creates the matching element. */
+.demo-caption {
+  position: fixed;
+  z-index: 2147483647;
+  top: 22px;
+  left: 50%;
+  min-width: 440px;
+  padding: 12px 22px;
+  color: #fff;
+  border-radius: 999px;
+  background: rgba(49, 82, 70, 0.94);
+  box-shadow: 0 14px 38px rgba(37, 36, 31, 0.22);
+  font: 750 17px/1.4 Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  letter-spacing: 0.01em;
+  text-align: center;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
 .toast {
   display: grid;
   grid-template-columns: 28px 1fr auto;
