@@ -1,7 +1,7 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
 const fs = require("node:fs/promises");
 const path = require("node:path");
-const { GitService, ChronoDraftError } = require("./git-service");
+const { GitService, ChronoDraftError, checkGit } = require("./git-service");
 
 let mainWindow;
 let service = null;
@@ -60,15 +60,19 @@ function requireProject() {
 
 function registerIpc() {
   handle("app:startup", async () => {
+    const git = await checkGit();
+    const platform = process.platform;
+    if (!git.installed) return { git, platform, project: null };
     const settings = await readSettings();
-    if (!settings.lastProjectPath) return { project: null };
+    if (!settings.lastProjectPath) return { git, platform, project: null };
     try {
-      return { project: await openProject(settings.lastProjectPath) };
+      return { git, platform, project: await openProject(settings.lastProjectPath) };
     } catch {
       await writeSettings({});
-      return { project: null };
+      return { git, platform, project: null };
     }
   });
+  handle("app:check-git", async () => ({ git: await checkGit(), platform: process.platform }));
 
   handle("project:choose", async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -94,8 +98,9 @@ function registerIpc() {
   });
   handle("external:open", (url) => {
     const parsed = new URL(url);
-    if (parsed.protocol !== "https:" || !["github.com", "docs.github.com"].includes(parsed.hostname)) {
-      throw new ChronoDraftError("INVALID_LINK", "只能打开安全的 GitHub 链接。");
+    const allowedHosts = ["github.com", "docs.github.com", "git-scm.com"];
+    if (parsed.protocol !== "https:" || !allowedHosts.includes(parsed.hostname)) {
+      throw new ChronoDraftError("INVALID_LINK", "只能打开经过确认的官方网站。");
     }
     return shell.openExternal(parsed.href);
   });

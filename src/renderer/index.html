@@ -22,6 +22,52 @@
       <p>正在打开你的版本时光机…</p>
     </div>
 
+    <main id="git-setup-screen" class="screen git-setup-screen hidden">
+      <section class="git-setup-card">
+        <div class="brand">
+          <div class="brand-mark">D</div>
+          <span>ChronoDraft</span>
+        </div>
+        <div class="git-setup-grid">
+          <div class="git-setup-copy">
+            <p class="eyebrow">开始前只差一步</p>
+            <h1>需要先安装 Git</h1>
+            <p class="git-setup-lead">
+              Git 是 ChronoDraft 用来保存历史版本的小工具。它免费、开源，安装一次就可以一直使用；你不需要学习 Git 命令。
+            </p>
+            <div class="git-setup-actions">
+              <button id="git-download" class="button button--primary button--large">
+                <span>打开 Git 官方安装页面</span>
+                <span aria-hidden="true">↗</span>
+              </button>
+              <button id="git-recheck" class="button button--secondary">我已安装，重新检测</button>
+            </div>
+            <p id="git-platform-help" class="git-platform-help"></p>
+          </div>
+
+          <aside class="git-check-guide" aria-label="Git 安装检查方法">
+            <span class="guide-number">1</span>
+            <div>
+              <strong>按照官方页面完成安装</strong>
+              <p id="git-install-tip">安装时使用默认选项即可。</p>
+            </div>
+            <span class="guide-number">2</span>
+            <div>
+              <strong>想自己确认？</strong>
+              <p>打开终端或命令提示符，输入：</p>
+              <code>git --version</code>
+              <p>看到类似 <code>git version 2.50.0</code> 就表示安装成功。</p>
+            </div>
+            <span class="guide-number guide-number--done">✓</span>
+            <div>
+              <strong>回到这里重新检测</strong>
+              <p>ChronoDraft 会自动确认，不需要你填写任何路径。</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
     <main id="welcome-screen" class="screen welcome-screen hidden">
       <section class="welcome-copy">
         <div class="brand">

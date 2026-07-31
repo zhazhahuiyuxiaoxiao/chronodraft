@@ -6,7 +6,7 @@ on:
       release_tag:
         description: Release tag that receives the installers
         required: true
-        default: v0.1.1
+        default: v0.1.2
   push:
     tags:
       - "v*"
@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.1' }}
+  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.2' }}
 
 jobs:
   test:
@@ -44,7 +44,7 @@ jobs:
               --repo "$GITHUB_REPOSITORY" \
               --title "ChronoDraft $RELEASE_TAG" \
               --prerelease \
-              --notes "早期预览版。v0.1.1 修复了 macOS 安装包被提示“已损坏”的问题。安装包尚未进行付费开发者签名，请先阅读 README 中的安装说明。"
+              --notes "早期预览版。v0.1.2 新增 Git 自动检测：缺少 Git 时会显示中文安装引导、官方链接和重新检测按钮。Electron 仍保持 38.8.6。安装包尚未进行付费开发者签名，请先阅读 README 中的安装说明。"
           fi
 
   build:

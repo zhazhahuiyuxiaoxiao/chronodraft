@@ -8,10 +8,10 @@
 
 给写作者、学生和研究者使用的本地版本时光机。
 
-[⬇️ **下载：苹果芯片 Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-arm64.dmg) ·
-[⬇️ **下载：Intel Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x64.dmg) ·
-[⬇️ **下载：Windows**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-Setup-0.1.1-x64.exe) ·
-[⬇️ **下载：Linux**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x86_64.AppImage)
+[⬇️ **下载：苹果芯片 Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-0.1.2-arm64.dmg) ·
+[⬇️ **下载：Intel Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-0.1.2-x64.dmg) ·
+[⬇️ **下载：Windows**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-Setup-0.1.2-x64.exe) ·
+[⬇️ **下载：Linux**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-0.1.2-x86_64.AppImage)
 
 </div>
 
@@ -23,10 +23,10 @@
 
 | 你的电脑 | 下载 |
 | --- | --- |
-| Mac，芯片显示“Apple M…” | [下载苹果芯片版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-arm64.dmg) |
-| Mac，芯片显示“Intel” | [下载 Intel 版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x64.dmg) |
-| Windows 10 / 11（64 位） | [下载安装程序 `.exe`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-Setup-0.1.1-x64.exe) |
-| Linux（64 位） | [下载 `.AppImage`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x86_64.AppImage) |
+| Mac，芯片显示“Apple M…” | [下载苹果芯片版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-0.1.2-arm64.dmg) |
+| Mac，芯片显示“Intel” | [下载 Intel 版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-0.1.2-x64.dmg) |
+| Windows 10 / 11（64 位） | [下载安装程序 `.exe`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-Setup-0.1.2-x64.exe) |
+| Linux（64 位） | [下载 `.AppImage`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.2/ChronoDraft-0.1.2-x86_64.AppImage) |
 
 不知道自己的 Mac 芯片？点击屏幕左上角的苹果图标，再点“关于本机”即可查看。
 
@@ -49,6 +49,32 @@
 ### Linux 安装
 
 下载 `.AppImage` 后，在文件属性中勾选“允许作为程序执行”，然后双击打开。
+
+## 第一次打开：自动检查 Git
+
+ChronoDraft 使用 Git 保存历史版本，但**不要求你学习 Git 命令**。软件启动时会自动检查：
+
+- 已经安装：直接进入 ChronoDraft。
+- 没有安装：显示中文说明和官方下载按钮；安装完成后点击“重新检测”即可。
+
+请只使用 Git 官方入口：
+
+| 你的电脑 | 官方安装页面 |
+| --- | --- |
+| Mac | [打开 Git for macOS 安装说明](https://git-scm.com/download/mac) |
+| Windows | [下载 Git for Windows](https://git-scm.com/download/win) |
+| Linux | [查看各发行版安装命令](https://git-scm.com/download/linux) |
+
+想自己确认时，打开终端或命令提示符，输入：
+
+```bash
+git --version
+```
+
+看到类似 `git version 2.50.0` 就表示安装成功。Mac 用户第一次运行这条命令时，系统也可能直接弹出安装提示。
+
+> [!NOTE]
+> 当前安装包不静默安装 Git：系统软件安装需要管理员权限，而且不同电脑的安装方式不同。由用户确认 Git 官方安装程序更安全，也更容易排查问题。
 
 ## 你是否也有这些文件？
 
@@ -108,7 +134,7 @@ ChronoDraft 不是需要部署服务器的前后端网站，而是一个本地 E
 
 - **界面**：HTML、CSS、原生 JavaScript
 - **本地能力**：Electron 38、Node.js
-- **版本保存**：电脑上已有的 Git
+- **版本保存**：自动检测电脑上的 Git；缺少时提供官方安装引导
 - **通信方式**：Electron IPC，不经过 HTTP
 - **端口**：普通使用不启动任何端口
 - **数据**：文件和版本历史保存在本机，GitHub 仅作为可选备份
@@ -136,7 +162,7 @@ npm test
 
 ## 当前状态
 
-ChronoDraft 目前是 **0.1.1 早期预览版**。核心本地保存、历史、安全恢复和 GitHub 推送已经可用。当前安装包未做开发者签名；一键登录、敏感文件扫描和 Word 对比仍在规划中。
+ChronoDraft 目前是 **0.1.2 早期预览版**。核心本地保存、历史、安全恢复和 GitHub 推送已经可用，并会在启动时自动检查 Git。当前安装包未做开发者签名；一键登录、敏感文件扫描和 Word 对比仍在规划中。
 
 欢迎提交 Issue，尤其欢迎不熟悉 Git 的写作者讲述真实使用障碍。开发说明见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)，技术设计见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
 

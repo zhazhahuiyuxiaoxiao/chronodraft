@@ -124,6 +124,118 @@ button {
   }
 }
 
+.git-setup-screen {
+  display: grid;
+  padding: 58px;
+  place-items: center;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.92), transparent 34%),
+    var(--paper);
+}
+
+.git-setup-card {
+  width: min(100%, 1020px);
+  padding: 34px 40px 40px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 24px 70px rgba(50, 45, 35, 0.1);
+}
+
+.git-setup-grid {
+  display: grid;
+  align-items: center;
+  gap: 54px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(330px, 0.92fr);
+  margin-top: 42px;
+}
+
+.git-setup-copy h1 {
+  margin: 14px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(44px, 5vw, 62px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+
+.git-setup-lead {
+  margin: 22px 0 27px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.git-setup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+.git-setup-actions .button--large {
+  min-width: 260px;
+}
+
+.git-platform-help {
+  min-height: 20px;
+  margin: 18px 0 0;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.git-check-guide {
+  display: grid;
+  align-items: start;
+  gap: 19px 14px;
+  grid-template-columns: 30px 1fr;
+  padding: 28px;
+  border: 1px solid rgba(67, 105, 91, 0.18);
+  border-radius: 18px;
+  background: var(--green-soft);
+}
+
+.guide-number {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: #fff;
+  border-radius: 50%;
+  background: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.guide-number--done {
+  color: var(--green);
+  background: #fff;
+}
+
+.git-check-guide strong {
+  display: block;
+  font-size: 14px;
+}
+
+.git-check-guide p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.git-check-guide code {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 5px 8px;
+  border: 1px solid rgba(67, 105, 91, 0.2);
+  border-radius: 6px;
+  color: var(--green-dark);
+  background: rgba(255, 255, 255, 0.75);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+}
+
 .welcome-screen {
   display: grid;
   grid-template-columns: minmax(480px, 56%) 1fr;

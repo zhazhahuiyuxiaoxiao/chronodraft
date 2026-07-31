@@ -30,7 +30,7 @@ flowchart LR
 | 主进程 | Node.js、CommonJS | 文件夹选择、设置存储、IPC 和系统能力 |
 | 界面 | HTML、CSS、原生 JavaScript | 欢迎页、改动列表、历史和设置界面 |
 | 安全桥 | Electron Preload、Context Bridge | 只向界面公开允许调用的功能 |
-| 版本引擎 | 用户电脑上的 Git | 初始化仓库、提交、同步和恢复 |
+| 版本引擎 | 用户电脑上的 Git | 启动时检测；初始化仓库、提交、同步和恢复 |
 | 自动测试 | Node.js Test Runner | 在临时目录中验证真实 Git 流程 |
 | 打包 | electron-builder 26.15.3 | 生成 DMG、ZIP、EXE 和 AppImage |
 | 持续集成 | GitHub Actions | 跨平台测试、构建、校验并上传 Release |
@@ -64,7 +64,8 @@ Main 创建桌面窗口、处理文件夹选择、保存少量本地设置，并
 - `sandbox: true`
 - 禁止页面自行导航
 - 禁止创建新窗口
-- 外部链接仅允许 GitHub 官方域名
+- GitHub 相关操作只允许打开 GitHub 官方域名
+- Git 安装引导只允许打开 `git-scm.com` 官方域名
 
 ### GitService：版本业务层
 

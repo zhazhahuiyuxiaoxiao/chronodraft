@@ -7,12 +7,28 @@ const { promisify } = require("node:util");
 const test = require("node:test");
 
 const {
+  checkGit,
   GitService,
   parsePorcelainV2,
   validateRemoteUrl,
 } = require("../src/git-service");
 
 const execFileAsync = promisify(execFile);
+
+test("detects the system Git used by ChronoDraft", async () => {
+  const result = await checkGit();
+  assert.equal(result.installed, true);
+  assert.match(result.version, /^\d+(?:\.\d+)+/);
+});
+
+test("reports a missing Git executable without exposing a command error", async () => {
+  const modulePath = path.join(__dirname, "..", "src", "git-service.js");
+  const script = `const { checkGit } = require(${JSON.stringify(modulePath)}); checkGit(["/chronodraft-test-path-without-git"]).then((result) => process.stdout.write(JSON.stringify(result)));`;
+  const { stdout } = await execFileAsync(process.execPath, ["-e", script], {
+    env: { ...process.env, PATH: "/chronodraft-test-path-without-git" },
+  });
+  assert.deepEqual(JSON.parse(stdout), { installed: false, version: "" });
+});
 
 async function makeProject() {
   const projectPath = await fs.mkdtemp(path.join(os.tmpdir(), "chronodraft-test-"));

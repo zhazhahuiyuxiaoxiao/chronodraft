@@ -1,5 +1,7 @@
 const state = {
   overview: null,
+  platform: "",
+  gitDownloadUrl: "https://git-scm.com/downloads",
   pendingAction: null,
   restoreTarget: null,
   messageTouched: false,
@@ -8,8 +10,13 @@ const state = {
 
 const elements = {
   loading: document.querySelector("#loading-screen"),
+  gitSetup: document.querySelector("#git-setup-screen"),
   welcome: document.querySelector("#welcome-screen"),
   app: document.querySelector("#app-screen"),
+  gitDownload: document.querySelector("#git-download"),
+  gitRecheck: document.querySelector("#git-recheck"),
+  gitPlatformHelp: document.querySelector("#git-platform-help"),
+  gitInstallTip: document.querySelector("#git-install-tip"),
   welcomeChoose: document.querySelector("#welcome-choose"),
   projectSwitcher: document.querySelector("#project-switcher"),
   projectName: document.querySelector("#project-name"),
@@ -101,6 +108,10 @@ function showToast(title, message = "", type = "success", duration = 5500) {
 }
 
 function handleError(error) {
+  if (error.code === "GIT_NOT_FOUND") {
+    showGitSetup(state.platform);
+    return;
+  }
   if (error.code === "IDENTITY_REQUIRED") {
     openIdentityModal();
     return;
@@ -362,8 +373,63 @@ function render(overview, { preserveMessage = false } = {}) {
 
 function showScreen(name) {
   elements.loading.classList.toggle("hidden", name !== "loading");
+  elements.gitSetup.classList.toggle("hidden", name !== "git");
   elements.welcome.classList.toggle("hidden", name !== "welcome");
   elements.app.classList.toggle("hidden", name !== "app");
+}
+
+function gitSetupDetails(platform) {
+  if (platform === "darwin") {
+    return {
+      url: "https://git-scm.com/download/mac",
+      tip: "在官方页面按提示操作；也可以在“终端”运行右侧的检测命令，再按照系统弹窗安装。",
+    };
+  }
+  if (platform === "win32") {
+    return {
+      url: "https://git-scm.com/download/win",
+      tip: "下载 Git for Windows 安装程序，安装时保持默认选项即可。",
+    };
+  }
+  if (platform === "linux") {
+    return {
+      url: "https://git-scm.com/download/linux",
+      tip: "安装页面会按照 Ubuntu、Fedora 等系统给出对应命令。",
+    };
+  }
+  return {
+    url: "https://git-scm.com/downloads",
+    tip: "请选择自己的电脑系统，并按照官方页面提示安装。",
+  };
+}
+
+function showGitSetup(platform, message = "") {
+  state.platform = platform || state.platform;
+  const details = gitSetupDetails(state.platform);
+  state.gitDownloadUrl = details.url;
+  elements.gitInstallTip.textContent = details.tip;
+  elements.gitPlatformHelp.textContent = message || "请只从 Git 官方网站下载安装。安装完成后，不需要重启电脑。";
+  showScreen("git");
+}
+
+async function recheckGit() {
+  elements.gitRecheck.disabled = true;
+  elements.gitRecheck.textContent = "正在检测…";
+  try {
+    const result = unwrap(await window.chronodraft.checkGit());
+    state.platform = result.platform;
+    if (!result.git.installed) {
+      showGitSetup(result.platform, "还没有检测到 Git。请完成安装后再点一次“重新检测”。");
+      return;
+    }
+    elements.gitPlatformHelp.textContent = `检测成功：Git ${result.git.version} 已经可以使用。`;
+    await loadInitialState();
+  } catch (error) {
+    handleError(error);
+  } finally {
+    elements.gitRecheck.disabled = false;
+    elements.gitRecheck.textContent = "我已安装，重新检测";
+  }
 }
 
 function switchView(name) {
@@ -547,6 +613,10 @@ async function restoreVersion() {
 }
 
 function wireEvents() {
+  elements.gitDownload.addEventListener("click", () => {
+    window.chronodraft.openExternal(state.gitDownloadUrl);
+  });
+  elements.gitRecheck.addEventListener("click", recheckGit);
   elements.welcomeChoose.addEventListener("click", chooseProject);
   elements.projectSwitcher.addEventListener("click", chooseProject);
   elements.saveButton.addEventListener("click", saveVersion);
@@ -594,10 +664,14 @@ function wireEvents() {
   });
 }
 
-async function startup() {
-  wireEvents();
+async function loadInitialState() {
   try {
     const result = unwrap(await window.chronodraft.startup());
+    state.platform = result.platform;
+    if (!result.git.installed) {
+      showGitSetup(result.platform);
+      return;
+    }
     if (result.project) {
       render(result.project);
       showScreen("app");
@@ -610,4 +684,5 @@ async function startup() {
   }
 }
 
-startup();
+wireEvents();
+loadInitialState();

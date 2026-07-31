@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("chronodraft", {
   startup: () => ipcRenderer.invoke("app:startup"),
+  checkGit: () => ipcRenderer.invoke("app:check-git"),
   chooseProject: () => ipcRenderer.invoke("project:choose"),
   refresh: () => ipcRenderer.invoke("project:refresh"),
   saveVersion: (message) => ipcRenderer.invoke("project:save", message),

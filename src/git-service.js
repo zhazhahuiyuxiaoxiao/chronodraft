@@ -3,6 +3,7 @@ const path = require("node:path");
 const { promisify } = require("node:util");
 
 const execFileAsync = promisify(execFile);
+let gitExecutable = "git";
 
 class ChronoDraftError extends Error {
   constructor(code, message, detail = "") {
@@ -13,9 +14,63 @@ class ChronoDraftError extends Error {
   }
 }
 
+function isGitMissing(error, detail = "") {
+  const message = `${error?.code || ""} ${error?.message || ""} ${detail}`;
+  return (
+    error?.code === "ENOENT" ||
+    /spawn git ENOENT|git.*not found|git.*is not recognized/i.test(message) ||
+    /xcrun: error: (?:invalid active developer path|active developer path.*does not exist)/i.test(message)
+  );
+}
+
+function gitCandidates() {
+  const candidates = ["git"];
+  if (process.platform === "win32") {
+    if (process.env.ProgramFiles) {
+      candidates.push(path.join(process.env.ProgramFiles, "Git", "cmd", "git.exe"));
+    }
+    if (process.env.LOCALAPPDATA) {
+      candidates.push(path.join(process.env.LOCALAPPDATA, "Programs", "Git", "cmd", "git.exe"));
+    }
+  }
+  if (process.platform === "darwin") {
+    candidates.push(
+      "/usr/bin/git",
+      "/usr/local/git/bin/git",
+      "/opt/homebrew/bin/git",
+      "/usr/local/bin/git",
+    );
+  }
+  return [...new Set(candidates)];
+}
+
+async function checkGit(candidates = gitCandidates()) {
+  for (const candidate of candidates) {
+    try {
+      const { stdout } = await execFileAsync(candidate, ["--version"], {
+        encoding: "utf8",
+        timeout: 15000,
+        env: { ...process.env, LC_ALL: "C" },
+      });
+      gitExecutable = candidate;
+      const version = String(stdout || "").trim().replace(/^git version\s+/i, "");
+      return { installed: true, version };
+    } catch (error) {
+      const detail = String(error.stderr || error.stdout || error.message || "").trim();
+      if (isGitMissing(error, detail)) continue;
+      throw new ChronoDraftError(
+        "GIT_CHECK_FAILED",
+        "暂时无法检查 Git，请重试。",
+        detail,
+      );
+    }
+  }
+  return { installed: false, version: "" };
+}
+
 async function runGit(cwd, args, options = {}) {
   try {
-    const result = await execFileAsync("git", ["-C", cwd, ...args], {
+    const result = await execFileAsync(gitExecutable, ["-C", cwd, ...args], {
       encoding: "utf8",
       maxBuffer: 10 * 1024 * 1024,
       env: {
@@ -32,10 +87,18 @@ async function runGit(cwd, args, options = {}) {
   } catch (error) {
     const stderr = String(error.stderr || "").trim();
     const stdout = String(error.stdout || "").trim();
+    const detail = stderr || stdout || String(error.message || "").trim();
+    if (isGitMissing(error, detail)) {
+      throw new ChronoDraftError(
+        "GIT_NOT_FOUND",
+        "还差一个必要组件：请先安装 Git。",
+        detail,
+      );
+    }
     throw new ChronoDraftError(
       "GIT_COMMAND_FAILED",
-      humanizeGitError(stderr || stdout || error.message),
-      stderr || stdout,
+      humanizeGitError(detail),
+      detail,
     );
   }
 }
@@ -463,6 +526,7 @@ class GitService {
 }
 
 module.exports = {
+  checkGit,
   ChronoDraftError,
   GitService,
   cleanRemoteUrl,
