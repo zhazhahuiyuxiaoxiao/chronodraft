@@ -2,6 +2,7 @@
   "name": "chronodraft",
   "version": "0.1.0",
   "description": "Version control for writers — without learning Git.",
+  "desktopName": "chronodraft",
   "main": "src/main.js",
   "author": "zhihao zhang",
   "homepage": "https://github.com/zhazhahuiyuxiaoxiao/chronodraft",
@@ -13,10 +14,10 @@
     "test": "node --test",
     "ui:smoke": "node scripts/ui-smoke.mjs",
     "icons": "node scripts/generate-icons.mjs",
-    "pack": "npx --yes electron-builder@26.15.3 --dir",
-    "dist:mac": "npx --yes electron-builder@26.15.3 --mac dmg zip --arm64",
-    "dist:win": "npx --yes electron-builder@26.15.3 --win nsis portable",
-    "dist:linux": "npx --yes electron-builder@26.15.3 --linux AppImage",
+    "pack": "npx --yes electron-builder@26.15.3 --dir --publish never",
+    "dist:mac": "npx --yes electron-builder@26.15.3 --mac dmg zip --arm64 --publish never",
+    "dist:win": "npx --yes electron-builder@26.15.3 --win nsis --publish never",
+    "dist:linux": "npx --yes electron-builder@26.15.3 --linux AppImage --publish never",
     "check": "node --check src/main.js && node --check src/preload.js && node --check src/git-service.js && node --check src/renderer/app.js"
   },
   "devDependencies": {
@@ -49,7 +50,7 @@
     },
     "win": {
       "icon": "build/icon.ico",
-      "artifactName": "${productName}-${version}-${arch}-${target}.${ext}"
+      "artifactName": "${productName}-Setup-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -60,6 +61,7 @@
     "linux": {
       "icon": "build/icon.png",
       "category": "Office",
+      "syncDesktopName": true,
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     }
   }

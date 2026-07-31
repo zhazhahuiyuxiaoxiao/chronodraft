@@ -13,8 +13,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -29,15 +29,15 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            command: npx --yes electron-builder@26.15.3 --mac dmg zip --x64 --arm64
+            command: npx --yes electron-builder@26.15.3 --mac dmg zip --x64 --arm64 --publish never
           - os: windows-latest
-            command: npx --yes electron-builder@26.15.3 --win nsis portable --x64
+            command: npx --yes electron-builder@26.15.3 --win nsis --x64 --publish never
           - os: ubuntu-latest
-            command: npx --yes electron-builder@26.15.3 --linux AppImage --x64
+            command: npx --yes electron-builder@26.15.3 --linux AppImage --x64 --publish never
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
