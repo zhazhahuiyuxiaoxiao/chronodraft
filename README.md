@@ -100,6 +100,19 @@ ChronoDraft 不保存密码、Token 或 SSH 私钥。当前预览版使用电脑
 
 需要注意：Git 能完整保存 `.docx` 的每一版，但暂时不能像 Markdown 一样显示逐段文字差异。Word 文本对比会在后续版本加入。
 
+## 技术说明
+
+ChronoDraft 不是需要部署服务器的前后端网站，而是一个本地 Electron 桌面应用：
+
+- **界面**：HTML、CSS、原生 JavaScript
+- **本地能力**：Electron 38、Node.js
+- **版本保存**：电脑上已有的 Git
+- **通信方式**：Electron IPC，不经过 HTTP
+- **端口**：普通使用不启动任何端口
+- **数据**：文件和版本历史保存在本机，GitHub 仅作为可选备份
+
+项目不需要 Docker、数据库或后台服务器。详细设计见 [技术架构文档](docs/ARCHITECTURE.md)。
+
 ## 本地开发
 
 需要 Node.js 20+ 和 Git：
@@ -123,7 +136,7 @@ npm test
 
 ChronoDraft 目前是 **0.1.1 早期预览版**。核心本地保存、历史、安全恢复和 GitHub 推送已经可用。当前安装包未做开发者签名；一键登录、敏感文件扫描和 Word 对比仍在规划中。
 
-欢迎提交 Issue，尤其欢迎不熟悉 Git 的写作者讲述真实使用障碍。开发说明见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)。
+欢迎提交 Issue，尤其欢迎不熟悉 Git 的写作者讲述真实使用障碍。开发说明见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)，技术设计见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
 
 ## 路线图
 

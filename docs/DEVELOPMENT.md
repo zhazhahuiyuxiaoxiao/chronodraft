@@ -43,6 +43,8 @@ npm run ui:smoke
 
 ## 架构
 
+完整的技术分析、进程边界、数据流和端口说明见 [ARCHITECTURE.md](ARCHITECTURE.md)。
+
 - `src/main.js`：Electron 主进程、窗口安全和 IPC。
 - `src/preload.js`：最小化的安全 API 桥。
 - `src/git-service.js`：Git 命令、状态、历史、同步和恢复。
