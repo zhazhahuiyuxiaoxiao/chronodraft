@@ -8,10 +8,10 @@
 
 给写作者、学生和研究者使用的本地版本时光机。
 
-[🍎 **苹果芯片 Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-arm64.dmg) ·
-[🍎 **Intel Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x64.dmg) ·
-[🪟 **Windows**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-Setup-0.1.0-x64.exe) ·
-[🐧 **Linux**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x86_64.AppImage)
+[⬇️ **下载：苹果芯片 Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-arm64.dmg) ·
+[⬇️ **下载：Intel Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x64.dmg) ·
+[⬇️ **下载：Windows**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-Setup-0.1.1-x64.exe) ·
+[⬇️ **下载：Linux**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x86_64.AppImage)
 
 </div>
 
@@ -21,10 +21,10 @@
 
 | 你的电脑 | 下载 |
 | --- | --- |
-| Mac，芯片显示“Apple M…” | [下载苹果芯片版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-arm64.dmg) |
-| Mac，芯片显示“Intel” | [下载 Intel 版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x64.dmg) |
-| Windows 10 / 11（64 位） | [下载安装程序 `.exe`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-Setup-0.1.0-x64.exe) |
-| Linux（64 位） | [下载 `.AppImage`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x86_64.AppImage) |
+| Mac，芯片显示“Apple M…” | [下载苹果芯片版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-arm64.dmg) |
+| Mac，芯片显示“Intel” | [下载 Intel 版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x64.dmg) |
+| Windows 10 / 11（64 位） | [下载安装程序 `.exe`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-Setup-0.1.1-x64.exe) |
+| Linux（64 位） | [下载 `.AppImage`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.1/ChronoDraft-0.1.1-x86_64.AppImage) |
 
 不知道自己的 Mac 芯片？点击屏幕左上角的苹果图标，再点“关于本机”即可查看。
 
@@ -34,8 +34,9 @@
 ### Mac 安装
 
 1. 打开下载的 `.dmg` 文件，把 ChronoDraft 拖进“应用程序”。
-2. 在 Finder 的“应用程序”中找到 ChronoDraft。
-3. 第一次请**右键选择“打开”**，然后再次点击“打开”。
+2. 在“应用程序”中打开 ChronoDraft。如果出现安全提醒，先关闭提醒。
+3. 打开“系统设置”→“隐私与安全”，向下找到 ChronoDraft，点击**“仍要打开”**。
+4. 输入电脑密码，再点击“打开”。以后就可以正常双击启动。
 
 ### Windows 安装
 
@@ -91,7 +92,7 @@ ChronoDraft 把它们藏起来，只留下写作者真正需要的四件事：
 2. 在 ChronoDraft 中点击 **连接 GitHub**。
 3. 粘贴仓库的 HTTPS 地址。
 
-ChronoDraft 不保存密码、Token 或 SSH 私钥。0.1.0 预览版使用电脑上已有的系统 Git 凭据；更直观的 GitHub 浏览器登录正在规划中。
+ChronoDraft 不保存密码、Token 或 SSH 私钥。当前预览版使用电脑上已有的系统 Git 凭据；更直观的 GitHub 浏览器登录正在规划中。
 
 ## 支持哪些文件？
 
@@ -120,7 +121,7 @@ npm test
 
 ## 当前状态
 
-ChronoDraft 目前是 **0.1.0 早期预览版**。核心本地保存、历史、安全恢复和 GitHub 推送已经可用。当前安装包未签名；一键登录、敏感文件扫描和 Word 对比仍在规划中。
+ChronoDraft 目前是 **0.1.1 早期预览版**。核心本地保存、历史、安全恢复和 GitHub 推送已经可用。当前安装包未做开发者签名；一键登录、敏感文件扫描和 Word 对比仍在规划中。
 
 欢迎提交 Issue，尤其欢迎不熟悉 Git 的写作者讲述真实使用障碍。开发说明见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)。
 

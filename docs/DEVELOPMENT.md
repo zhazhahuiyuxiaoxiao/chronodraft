@@ -71,6 +71,6 @@ npm run ui:smoke
 
 英文传播句：**Version control for writers — without learning Git.**
 
-核心受众：Markdown / Obsidian 写作者、LaTeX 用户、课程资料维护者、纯文本小说作者。Word 用户可以保存版本，但 0.1.0 尚不能逐段比较 `.docx`。
+核心受众：Markdown / Obsidian 写作者、LaTeX 用户、课程资料维护者、纯文本小说作者。Word 用户可以保存版本，但当前预览版尚不能逐段比较 `.docx`。
 
 第一版不需要 Docker、数据库或服务器。文件、Git 历史和凭据都留在用户电脑上，GitHub 仅作为可选的远端备份。

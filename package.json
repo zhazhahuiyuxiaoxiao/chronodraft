@@ -1,6 +1,6 @@
 {
   "name": "chronodraft",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Version control for writers — without learning Git.",
   "desktopName": "chronodraft",
   "main": "src/main.js",
@@ -42,7 +42,8 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "build/icon.icns",
-      "identity": null,
+      "identity": "-",
+      "hardenedRuntime": false,
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "dmg": {
