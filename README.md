@@ -8,9 +8,24 @@
 
 给写作者、学生和研究者使用的本地版本时光机。
 
+[⬇️ **下载 macOS 版（苹果芯片）**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-arm64.dmg)
+
 </div>
 
 ![ChronoDraft 主界面](docs/app-preview.png)
+
+## 下载安装（Mac）
+
+目前提供适用于苹果芯片 Mac（M1、M2、M3、M4 等）的预览版：
+
+1. 点击上方的 **下载 macOS 版**。
+2. 打开下载的 `.dmg` 文件，把 ChronoDraft 拖进“应用程序”。
+3. 在 Finder 的“应用程序”中找到 ChronoDraft，**右键选择“打开”**，然后再次点击“打开”。
+
+> [!IMPORTANT]
+> **第一次不能直接双击打开是正常的。** 当前预览版还没有 Apple 开发者签名，所以 macOS 无法确认开发者身份。请只从本仓库下载；如果不想绕过系统提醒，可以等待以后提供签名版本。
+
+Windows、Intel 芯片 Mac 和 Linux 的测试包已经构建通过，但暂未提供适合小白直接下载的正式入口。
 
 ## 你是否也有这些文件？
 
@@ -37,19 +52,6 @@ ChronoDraft 把它们藏起来，只留下写作者真正需要的四件事：
 3. 点击 **保存新版本**。
 
 第一次使用不需要服务器、Docker、数据库或付费账号。ChronoDraft 会在所选文件夹中创建标准 Git 历史，但界面不会要求你学习 Git。
-
-## 下载与安装
-
-请从 [Releases](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases) 下载适合自己系统的安装包。
-
-> [!IMPORTANT]
-> 当前预览版安装包**尚未进行代码签名和公证**。因此 macOS 或 Windows 可能显示“无法验证开发者”“未知发布者”等安全提示。这不代表软件已经完成系统信任验证；请只从本仓库的 Releases 页面下载，并自行判断是否继续安装。
-
-- **macOS**：如果直接打开被拦截，请在 Finder 中右键 ChronoDraft，选择“打开”，再次确认。
-- **Windows**：如果 SmartScreen 弹出提醒，请确认文件来自本仓库，再选择“更多信息”决定是否运行。
-- **不想绕过系统提醒**：可以暂不安装，等待未来提供签名版本，或按照下方“本地开发”步骤从源码运行。
-
-代码签名需要开发者证书及持续维护成本。项目现阶段优先验证核心功能，签名与公证将在条件允许时处理，目前不承诺具体版本或日期。
 
 ## 为什么它对小白更友好？
 
