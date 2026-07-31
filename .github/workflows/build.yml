@@ -91,3 +91,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$RELEASE_TAG" ${{ matrix.release_files }} --clobber --repo "$GITHUB_REPOSITORY"
+
+  checksums:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          path: installers
+          merge-multiple: true
+      - name: Create SHA-256 checksums
+        working-directory: installers
+        run: find . -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+      - name: Add checksums to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" installers/SHA256SUMS.txt --clobber --repo "$GITHUB_REPOSITORY"

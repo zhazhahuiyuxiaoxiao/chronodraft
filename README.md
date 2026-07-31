@@ -8,24 +8,44 @@
 
 给写作者、学生和研究者使用的本地版本时光机。
 
-[⬇️ **下载 macOS 版（苹果芯片）**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-arm64.dmg)
+[🍎 **苹果芯片 Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-arm64.dmg) ·
+[🍎 **Intel Mac**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x64.dmg) ·
+[🪟 **Windows**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-Setup-0.1.0-x64.exe) ·
+[🐧 **Linux**](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x86_64.AppImage)
 
 </div>
 
 ![ChronoDraft 主界面](docs/app-preview.png)
 
-## 下载安装（Mac）
+## 下载与安装
 
-目前提供适用于苹果芯片 Mac（M1、M2、M3、M4 等）的预览版：
+| 你的电脑 | 下载 |
+| --- | --- |
+| Mac，芯片显示“Apple M…” | [下载苹果芯片版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-arm64.dmg) |
+| Mac，芯片显示“Intel” | [下载 Intel 版 `.dmg`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x64.dmg) |
+| Windows 10 / 11（64 位） | [下载安装程序 `.exe`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-Setup-0.1.0-x64.exe) |
+| Linux（64 位） | [下载 `.AppImage`](https://github.com/zhazhahuiyuxiaoxiao/chronodraft/releases/download/v0.1.0/ChronoDraft-0.1.0-x86_64.AppImage) |
 
-1. 点击上方的 **下载 macOS 版**。
-2. 打开下载的 `.dmg` 文件，把 ChronoDraft 拖进“应用程序”。
-3. 在 Finder 的“应用程序”中找到 ChronoDraft，**右键选择“打开”**，然后再次点击“打开”。
+不知道自己的 Mac 芯片？点击屏幕左上角的苹果图标，再点“关于本机”即可查看。
 
 > [!IMPORTANT]
-> **第一次不能直接双击打开是正常的。** 当前预览版还没有 Apple 开发者签名，所以 macOS 无法确认开发者身份。请只从本仓库下载；如果不想绕过系统提醒，可以等待以后提供签名版本。
+> **当前是未签名预览版。** Mac 可能提示“无法验证开发者”，Windows 可能提示“未知发布者”。请只从本仓库下载；如果不想绕过系统提醒，可以等待以后提供签名版本。
 
-Windows、Intel 芯片 Mac 和 Linux 的测试包已经构建通过，但暂未提供适合小白直接下载的正式入口。
+### Mac 安装
+
+1. 打开下载的 `.dmg` 文件，把 ChronoDraft 拖进“应用程序”。
+2. 在 Finder 的“应用程序”中找到 ChronoDraft。
+3. 第一次请**右键选择“打开”**，然后再次点击“打开”。
+
+### Windows 安装
+
+1. 打开下载的 `.exe` 文件，按照画面提示安装。
+2. 如果出现 Windows 保护提醒，确认文件来自本仓库后，点击“更多信息”。
+3. 选择“仍要运行”。
+
+### Linux 安装
+
+下载 `.AppImage` 后，在文件属性中勾选“允许作为程序执行”，然后双击打开。
 
 ## 你是否也有这些文件？
 
