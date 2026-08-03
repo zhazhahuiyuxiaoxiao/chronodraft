@@ -15,8 +15,7 @@ npm run dev
 提交代码前请运行：
 
 ```bash
-npm run check
-npm test
+npm run verify
 ```
 
 ## 产品原则

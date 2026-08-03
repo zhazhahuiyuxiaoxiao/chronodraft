@@ -1,4 +1,4 @@
-name: Build desktop apps
+name: Test and build desktop apps
 
 on:
   workflow_dispatch:
@@ -6,66 +6,54 @@ on:
       release_tag:
         description: Release tag that receives the installers
         required: true
-        default: v0.1.2
+        default: v0.2.0
+  pull_request:
+    branches:
+      - main
   push:
+    branches:
+      - main
     tags:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 env:
-  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.2' }}
+  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run check
-      - run: npm test
-
-  prepare-release:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ensure Release exists
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if ! gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release create "$RELEASE_TAG" \
-              --repo "$GITHUB_REPOSITORY" \
-              --title "ChronoDraft $RELEASE_TAG" \
-              --prerelease \
-              --notes "早期预览版。v0.1.2 新增 Git 自动检测：缺少 Git 时会显示中文安装引导、官方链接和重新检测按钮。Electron 仍保持 38.8.6。安装包尚未进行付费开发者签名，请先阅读 README 中的安装说明。"
-          fi
+      - run: npm run verify
+      - name: Ensure release tag matches package version
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+        run: node -e 'const expected = `v${require("./package.json").version}`; if (process.env.RELEASE_TAG !== expected) { console.error(`Release tag must be ${expected}, received ${process.env.RELEASE_TAG}`); process.exit(1); }'
 
   build:
-    needs: prepare-release
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+    needs: test
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: macos-latest
             command: npx --yes electron-builder@26.15.3 --mac dmg zip --x64 --arm64 --publish never
-            release_files: release/*.dmg release/*.zip
           - os: windows-latest
             command: npx --yes electron-builder@26.15.3 --win nsis --x64 --publish never
-            release_files: release/*.exe
           - os: ubuntu-latest
             command: npx --yes electron-builder@26.15.3 --linux AppImage --x64 --publish never
-            release_files: release/*.AppImage
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -77,10 +65,14 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          find release -maxdepth 2 -type d -name "ChronoDraft.app" -print0 |
-            while IFS= read -r -d '' app; do
-              codesign --verify --deep --strict --verbose=4 "$app"
-            done
+          apps="$(find release -maxdepth 2 -type d -name 'ChronoDraft.app')"
+          if [[ -z "$apps" ]]; then
+            echo "No macOS app bundle was produced" >&2
+            exit 1
+          fi
+          while IFS= read -r app; do
+            codesign --verify --deep --strict --verbose=4 "$app"
+          done <<< "$apps"
       - uses: actions/upload-artifact@v7
         with:
           name: ChronoDraft-${{ runner.os }}
@@ -90,24 +82,31 @@ jobs:
             release/*.exe
             release/*.AppImage
           if-no-files-found: error
-      - name: Add installers to Release
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$RELEASE_TAG" ${{ matrix.release_files }} --clobber --repo "$GITHUB_REPOSITORY"
 
-  checksums:
+  release:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           path: installers
           merge-multiple: true
       - name: Create SHA-256 checksums
         working-directory: installers
-        run: find . -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
-      - name: Add checksums to Release
+        run: find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+      - name: Create or update prerelease
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$RELEASE_TAG" installers/SHA256SUMS.txt --clobber --repo "$GITHUB_REPOSITORY"
+        run: |
+          if ! gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "ChronoDraft $RELEASE_TAG" \
+              --prerelease \
+              --generate-notes
+          fi
+          gh release upload "$RELEASE_TAG" installers/* --clobber --repo "$GITHUB_REPOSITORY"

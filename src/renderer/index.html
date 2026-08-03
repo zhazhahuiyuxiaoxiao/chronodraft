@@ -160,9 +160,9 @@
             </button>
           </div>
           <div class="header-actions">
-            <span id="sync-badge" class="sync-badge">
+            <button id="sync-badge" class="sync-badge" type="button" title="立即检查并同步" disabled>
               <i></i><span>本地安全</span>
-            </span>
+            </button>
             <button id="show-folder" class="icon-button" title="在文件夹中显示">↗</button>
             <button id="refresh-button" class="icon-button" title="刷新">↻</button>
           </div>
@@ -211,6 +211,13 @@
                   <span class="button-arrow">→</span>
                 </button>
                 <p class="keyboard-tip"><kbd>⌘</kbd><kbd>↵</kbd> 快速保存</p>
+                <div class="auto-snapshot-note">
+                  <span aria-hidden="true">⌁</span>
+                  <div>
+                    <strong>自动安全快照已开启</strong>
+                    <small id="auto-snapshot-note">有改动时每 10 分钟在本机保护一次</small>
+                  </div>
+                </div>
               </section>
 
               <section class="panel changes-panel">
@@ -222,6 +229,15 @@
                   <button id="changes-refresh" class="text-button">刷新</button>
                 </div>
                 <div id="changes-list" class="changes-list"></div>
+                <details id="ignored-summary" class="ignored-summary hidden">
+                  <summary>
+                    <span aria-hidden="true">◇</span>
+                    <strong id="ignored-count">有内容未纳入版本</strong>
+                    <small>查看</small>
+                  </summary>
+                  <p>这些路径匹配 Git 忽略规则，不会被 ChronoDraft 保存。确认它们都是缓存或临时文件即可。</p>
+                  <ul id="ignored-list"></ul>
+                </details>
               </section>
             </div>
 
@@ -245,7 +261,25 @@
               <h2>历史版本</h2>
               <p>每次保存都是一个安全锚点。恢复前，当前内容也会自动备份。</p>
             </div>
+            <details id="auto-snapshot-section" class="auto-snapshot-section">
+              <summary>
+                <span class="snapshot-section-icon" aria-hidden="true">⌁</span>
+                <span>
+                  <strong>自动安全快照</strong>
+                  <small id="auto-snapshot-summary">等待第一次自动保护</small>
+                </span>
+                <span id="auto-snapshot-count" class="count-badge">0 个</span>
+                <span class="snapshot-chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div class="auto-snapshot-body">
+                <p>有改动时每 10 分钟创建一次，只保存在本机；最多保留 30 个且不超过 7 天，不会混入正式版本或自动上传。</p>
+                <div id="auto-snapshots" class="timeline timeline--snapshots"></div>
+              </div>
+            </details>
             <div id="full-history" class="timeline timeline--full"></div>
+            <button id="history-load-more" class="button button--secondary history-load-more hidden" type="button">
+              加载更早版本
+            </button>
           </div>
         </div>
       </section>
@@ -276,30 +310,268 @@
         </form>
       </section>
 
-      <section id="remote-modal" class="modal hidden" role="dialog" aria-modal="true">
+      <section
+        id="remote-modal"
+        class="modal modal--github-connect hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="github-connect-title"
+      >
         <button class="modal-close" data-close-modal aria-label="关闭">×</button>
         <p class="section-kicker">免费的异地备份</p>
-        <h2>连接 GitHub</h2>
+        <h2 id="github-connect-title">三步开启云端备份</h2>
         <p class="modal-description">
-          先在 GitHub 新建一个空的私有仓库，再把仓库地址粘贴到这里。ChronoDraft 不会读取或保存你的密码、Token 或私钥。
+          跟着当前步骤操作即可。英文 GitHub 页面只需要点击图示中的位置，不必理解 Git 命令。
         </p>
-        <div class="safety-banner"><span>♢</span> 凭据由系统 Git 管理，ChronoDraft 永远不接触私钥</div>
-        <form id="remote-form">
-          <label>
-            <span>GitHub 仓库地址</span>
-            <input
-              id="remote-url"
-              type="url"
-              spellcheck="false"
-              placeholder="https://github.com/你的用户名/仓库名.git"
-              required
-            />
-          </label>
-          <button class="button button--primary" type="submit">连接这个仓库</button>
-        </form>
+
+        <div class="github-wizard-layout">
+          <div class="github-wizard-main">
+            <ol class="github-steps" aria-label="云端备份设置进度">
+              <li id="github-step-login" class="is-active">
+                <span class="github-step-number">1</span>
+                <span><strong>登录</strong><small id="github-step-login-status">当前步骤</small></span>
+              </li>
+              <li id="github-step-prepare">
+                <span class="github-step-number">2</span>
+                <span><strong>准备仓库</strong><small id="github-step-prepare-status">未开始</small></span>
+              </li>
+              <li id="github-step-authorize">
+                <span class="github-step-number">3</span>
+                <span><strong>授权并连接</strong><small id="github-step-authorize-status">未开始</small></span>
+              </li>
+            </ol>
+
+            <div id="github-auth-card" class="github-auth-card">
+              <span class="github-auth-icon" aria-hidden="true">⌁</span>
+              <div>
+                <strong id="github-auth-title">正在检查 GitHub 登录…</strong>
+                <p id="github-auth-description">登录凭据只会加密保存在这台电脑上。</p>
+              </div>
+              <div class="github-auth-actions">
+                <button id="github-login" class="button button--primary" type="button">用浏览器登录</button>
+                <button id="github-logout" class="text-button text-button--danger hidden" type="button">退出此设备</button>
+              </div>
+            </div>
+
+            <section id="github-prepare-panel" class="github-wizard-panel hidden">
+              <span class="github-panel-eyebrow">第 2 步</span>
+              <h3>准备一个专门放文稿的私有仓库</h3>
+              <p>ChronoDraft 已帮你填写名称并选择私有；GitHub 打开后只需确认并创建。</p>
+              <div class="github-repository-suggestion">
+                <span>建议仓库名</span>
+                <output id="github-repository-name">chronodraft-writing-backup</output>
+              </div>
+              <button id="github-create-repository" class="button button--primary" type="button">
+                帮我填写并打开 GitHub ↗
+              </button>
+              <button id="github-have-repository" class="text-button" type="button">
+                我已经有备份仓库，直接下一步
+              </button>
+            </section>
+
+            <section id="github-authorize-panel" class="github-wizard-panel hidden">
+              <span class="github-panel-eyebrow">第 3 步</span>
+              <h3 id="github-repository-heading">授权 ChronoDraft 访问备份仓库</h3>
+              <p id="github-repository-status" aria-live="polite">
+                GitHub 中选择刚创建的仓库，返回后这里会自动出现。
+              </p>
+              <div class="github-repository-actions">
+                <button id="github-install" class="button button--primary" type="button">选择授权仓库 ↗</button>
+                <button id="github-repository-refresh" class="button button--secondary" type="button">我已完成，刷新</button>
+              </div>
+              <button id="github-back-prepare" class="text-button" type="button">还没有仓库，返回第 2 步</button>
+              <div id="github-repository-list" class="github-repository-list" aria-live="polite"></div>
+              <div id="github-repository-empty" class="github-repository-empty hidden">
+                <strong>还没有发现可写仓库</strong>
+                <p>如果刚创建了仓库，请重新打开授权设置并勾选它。</p>
+                <button id="github-configure-installation" class="text-button" type="button">重新选择授权范围 ↗</button>
+              </div>
+            </section>
+
+            <div id="github-storage-note" class="safety-banner">
+              <span>♢</span> 正在检查系统安全密钥库
+            </div>
+          </div>
+
+          <aside class="github-guide" aria-live="polite">
+            <span id="github-guide-step" class="github-guide-step">第 1 步参考</span>
+            <h3 id="github-guide-title">GitHub 页面会要求输入验证码</h3>
+            <p id="github-guide-description">不用填写密码；把 ChronoDraft 显示的八位验证码输入进去即可。</p>
+            <div class="github-browser-preview" aria-hidden="true">
+              <div class="github-browser-bar"><i></i><i></i><i></i><span>github.com</span></div>
+              <div class="github-browser-page">
+                <span class="github-preview-mark">◆</span>
+                <strong id="github-guide-english">Device activation</strong>
+                <span id="github-guide-field" class="github-preview-field">XXXX-XXXX</span>
+                <span id="github-guide-button" class="github-preview-button">Continue</span>
+              </div>
+              <span id="github-guide-callout" class="github-guide-callout">把应用里的验证码填在这里</span>
+            </div>
+            <div class="github-translation">
+              <span>页面英文</span>
+              <strong id="github-guide-translation">Continue = 继续</strong>
+            </div>
+            <p class="github-guide-trust">ChronoDraft 只申请文稿同步权限，不申请删除仓库或管理账户的权限。</p>
+          </aside>
+        </div>
+
+        <details id="github-advanced" class="github-advanced">
+          <summary>高级设置：手动仓库地址或 SSH</summary>
+          <form id="remote-form">
+            <label>
+              <span>GitHub 仓库地址</span>
+              <input
+                id="remote-url"
+                type="text"
+                inputmode="url"
+                spellcheck="false"
+                placeholder="https://github.com/你的用户名/仓库名.git"
+                required
+              />
+            </label>
+            <button class="button button--secondary" type="submit">手动连接这个仓库</button>
+          </form>
+        </details>
         <div class="modal-footer-row">
-          <button id="create-repository-link" class="text-button">去 GitHub 免费新建仓库 ↗</button>
+          <span class="github-footer-note">本地保存始终可用，云端设置失败也不会影响文稿。</span>
           <button id="remove-remote" class="text-button text-button--danger hidden">断开当前仓库</button>
+        </div>
+      </section>
+
+      <section
+        id="github-login-modal"
+        class="modal modal--github-login hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="github-login-title"
+      >
+        <button class="modal-close" data-close-modal aria-label="取消登录">×</button>
+        <p class="section-kicker">安全浏览器登录</p>
+        <h2 id="github-login-title">在 GitHub 输入这组验证码</h2>
+        <p class="modal-description">
+          GitHub 页面已经在浏览器中打开。确认页面显示的应用是 ChronoDraft，再输入下面的验证码。
+        </p>
+        <output id="github-device-code" class="github-device-code">—</output>
+        <p id="github-login-status" class="github-login-status" aria-live="polite">
+          正在等待你在浏览器中确认…
+        </p>
+        <div class="safety-banner">
+          <span>✓</span> ChronoDraft 不会要求 GitHub 密码，也不会把访问令牌发送到项目或界面。
+        </div>
+        <div class="modal-actions">
+          <button class="button button--secondary" data-close-modal>取消</button>
+          <button id="github-reopen-login" class="button button--primary" type="button">重新打开 GitHub ↗</button>
+        </div>
+      </section>
+
+      <section
+        id="cloud-review-modal"
+        class="modal modal--cloud-review hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cloud-review-title"
+      >
+        <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+        <p class="section-kicker">上传前保护</p>
+        <h2 id="cloud-review-title">请先确认这些内容</h2>
+        <p id="cloud-review-description" class="modal-description">
+          本地版本已经保存。ChronoDraft 不会展示检测到的密钥内容，只会告诉你需要检查哪些文件。
+        </p>
+        <div class="cloud-review-stats">
+          <span><strong id="cloud-review-versions">0</strong> 个正式版本</span>
+          <span><strong id="cloud-review-files">0</strong> 个历史文件</span>
+        </div>
+        <div id="cloud-review-list" class="cloud-review-list"></div>
+        <label id="cloud-review-confirm-row" class="cloud-confirm-row">
+          <input id="cloud-review-check" type="checkbox" />
+          <span>我已检查这些路径，确认没有仍然有效的密钥或不应上传的私密内容。</span>
+        </label>
+        <div class="modal-actions">
+          <button class="button button--secondary" data-close-modal>暂不上传</button>
+          <button id="cloud-review-confirm" class="button button--primary" disabled>
+            确认并上传
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="sync-conflict-modal"
+        class="modal modal--sync-conflict hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sync-conflict-title"
+      >
+        <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+        <p class="section-kicker">云端内容需要确认</p>
+        <h2 id="sync-conflict-title">本机和云端改到了同一处</h2>
+        <p class="modal-description">
+          ChronoDraft 已退出本次同步并恢复到操作前状态。确认后，本机冲突文件会保持原样，云端内容会在同一目录另存为带“云端副本”的新文件。
+        </p>
+        <div class="conflict-version-grid">
+          <article>
+            <span>本机版本</span>
+            <strong id="conflict-local-title">—</strong>
+            <small id="conflict-local-meta">—</small>
+          </article>
+          <article>
+            <span>云端版本</span>
+            <strong id="conflict-remote-title">—</strong>
+            <small id="conflict-remote-meta">—</small>
+          </article>
+        </div>
+        <div class="conflict-files-heading">
+          <strong>需要确认的文件</strong>
+          <span id="conflict-file-count">0 个</span>
+        </div>
+        <div id="conflict-files" class="conflict-files"></div>
+        <div class="safety-banner">
+          <span>✓</span>
+          本机文件、正式版本和自动快照都没有被覆盖；关闭窗口后可以继续正常写作。
+        </div>
+        <label class="cloud-confirm-row conflict-confirm-row">
+          <input id="conflict-confirm-check" type="checkbox" />
+          <span>我确认保留本机状态，并把云端冲突内容另存为新文件；已有同名副本也不会被覆盖。</span>
+        </label>
+        <div class="modal-actions">
+          <button class="button button--secondary" data-close-modal>稍后处理</button>
+          <button id="conflict-show-folder" class="button button--secondary">打开项目文件夹</button>
+          <button id="conflict-resolve" class="button button--primary" disabled>两份都保留并继续</button>
+        </div>
+      </section>
+
+      <section
+        id="version-modal"
+        class="modal modal--version hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="version-detail-title"
+      >
+        <button class="modal-close" data-close-modal aria-label="关闭">×</button>
+        <p class="section-kicker">这个版本具体改了什么？</p>
+        <h2 id="version-detail-title">版本详情</h2>
+        <p id="version-detail-meta" class="modal-description"></p>
+        <div class="version-detail-grid">
+          <section class="version-files-panel" aria-label="改动文件">
+            <div class="version-panel-heading">
+              <strong>改动文件</strong>
+              <span id="version-file-count">0</span>
+            </div>
+            <div id="version-files" class="version-files"></div>
+          </section>
+          <section class="version-diff-panel" aria-label="文件内容差异">
+            <div class="version-panel-heading">
+              <strong id="version-diff-title">内容对比</strong>
+              <span>绿色为新增，红色为删除</span>
+            </div>
+            <div id="version-diff" class="version-diff version-diff--empty">
+              正在读取版本详情…
+            </div>
+          </section>
+        </div>
+        <div class="modal-actions version-modal-actions">
+          <button id="version-milestone" class="button button--secondary">☆ 设为里程碑</button>
+          <button class="button button--secondary" data-close-modal>关闭</button>
+          <button id="version-restore" class="button button--primary">恢复整个版本</button>
         </div>
       </section>
 

@@ -40,9 +40,9 @@
 
 我做了一个本地优先的 Electron 桌面工具 **ChronoDraft**，目标是让不了解 Repository、Commit、Branch、Push 的写作者也能使用版本管理。
 
-界面只保留“保存新版本、查看历史、安全恢复、云端备份”。本地保存始终先完成；GitHub 推送失败不会撤销已经保存的本地版本。应用不需要服务器、数据库或 Docker，也不收集 Token 和 SSH 私钥。
+界面只保留“保存新版本、查看历史、安全恢复、云端备份”。本地保存始终先完成；GitHub 推送失败不会撤销已经保存的本地版本。应用不需要服务器、数据库或 Docker，也不会要求用户粘贴 Token、密码或 SSH 私钥；浏览器登录凭据由系统密钥库加密。
 
-当前是 `v0.1.2` 早期预览版，支持 Apple Silicon Mac、Intel Mac、Windows 64 位和 Linux 64 位。启动时会自动检查 Git，缺少时提供中文安装引导。欢迎真实写作者试用，也欢迎开发者查看架构和提出改进建议。
+当前是 `v0.2.0` 早期预览版，支持 Apple Silicon Mac、Intel Mac、Windows 64 位和 Linux 64 位。启动时会自动检查 Git，缺少时提供中文安装引导。欢迎真实写作者试用，也欢迎开发者查看架构和提出改进建议。
 
 项目：<https://github.com/zhazhahuiyuxiaoxiao/chronodraft>
 
@@ -58,7 +58,7 @@
 
 ## 发布前检查
 
-- 链接指向 `v0.1.2` 或仓库首页
+- 链接指向 `v0.2.0` 或仓库首页
 - 同时附上 `social-preview.png` 和 `demo.gif`
 - 在仓库 **Settings → General → Social preview → Edit** 上传 `social-preview.png`
 - 明确说明早期预览版和未签名提示
