@@ -1,3 +1,13 @@
+## 工程维护入口（2026-10-29）
+
+本次按已提交 `main`（`288d65823867342cd591b1536826cd7e9e8af9e7`）补录工程与 OpenSpec 基线；下方原有产品介绍、署名和许可保留。历史验证记录不代表本次重新完成真机、云端或发布验收。
+
+本地 Electron 写作版本工具；package.json 为 0.2.0，系统 Git 保存历史，GitHub 是可选备份。
+
+- [工程基线与验收边界](docs/engineering-baseline.md)
+- [项目开发约定](AGENTS.md)
+- [OpenSpec 维护流程](openspec/README.md)
+
 <div align="center">
 
 # ChronoDraft
